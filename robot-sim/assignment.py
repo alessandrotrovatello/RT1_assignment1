@@ -48,46 +48,104 @@ def turn(speed, seconds):
     time.sleep(seconds)
     R.motors[0].m0.power = 0
     R.motors[0].m1.power = 0
+		
 
-def find_first_token():
-    """
-    Function to find the closest token
+def count_token():
+	"""
+	Function to count how many tokens there are in arena and save their ID in a set.
+	
+	Returns:
+	n (int): numbers of tokens
+	id_set (set): set of token id
+	"""
+	id_set = []
+	dist=100
+	for i in range(12):
+		for token in R.see():
+			token_id = token.info.code
+			if token_id not in id_set and token_id:
+				id_set.append(token_id)
+		turn(10,1)
+	first_id = max(id_set)
+	id_set.remove(first_id)
+	n = len(id_set)
+	return n, id_set, first_id
 
-    Returns:
-	dist (float): distance of the closest token (-1 if no token is detected)
-	rot_y (float): angle between the robot and the token (-1 if no token is detected)
-    """
-    dist=100
-    for token in R.see():
-        if token.dist < dist:
-        	dist = token.dist
-        	rot_y = token.rot_y
-    if dist==100:
-		return -1, -1
-    else:
-   		return dist, rot_y
-   	
-def main():
-	while 1:
-		dist, rot_y = find_first_token()
-		if dist==-1:
+	
+def find_token(id_set, first_id):
+	dist=100
+	while True:
+		for token in R.see():
+			if token.info.code is not first_id and token.info.code in id_set:
+				dist = token.dist
+				rot_y = token.rot_y
+				id_token = token.info.code
+		if dist==100:
 			print("I don't see any token!!")
-			turn(+10,1);
+			turn(-10,1);
 		elif dist < d_th: 
 			print("Token Found!")
 			if R.grab(): # if we are close to the token, we grab it.
 				print("Gotcha!")
+				#turn(30,2)
+				#R.release()
+				#turn(-30,2)
+				#drive(30,1)
+				print(token.info.code)
+				id_set.remove(token.info.code)
+				print("I removed from id_set list the token with id:",id_token)
+				print("The new list is:",id_set)
+				print("Other", len(id_set),"token to pair")
+				find_first(first_id)
+				print("Ho appena finito di eseguire find_first",id_set)
 			else:
 				print("I'm not close enough");
 		elif -a_th <= rot_y <= a_th: # if the robot is well aligned with the token, we go forward
-			print("Ah, here we are!.")
+			print("Ah, here we are!.",id_token)
 			drive(10, 0.5)
 		elif rot_y < -a_th: # if the robot is not well aligned with the token, we move it on the left or on the right
 			print("Left a bit...")
 			turn(-2, 0.5)
 		elif rot_y > a_th:
 			print("Right a bit...")
-			turn(+2, 0.5)		
+			turn(+2, 0.5)
+		return id_set
+		
+def find_first(first_id):
+	dist=100
+	while True:
+		for token in R.see():
+			if token.info.code is first_id:
+				dist = token.dist
+				rot_y = token.rot_y
+		if dist==100:
+			print("I don't see any token!!")
+			turn(-10,1);
+		elif dist < 1.8*d_th: 
+			print("Token Found!")
+			R.release() # if we are close to the token, we grab it.
+			drive(-30,1)
+			turn(30,2)
+			break
+		elif -a_th <= rot_y <= a_th: # if the robot is well aligned with the token, we go forward
+			print("Ah, here we are!.",token.info.code)
+			drive(10, 0.5)
+		elif rot_y < -a_th: # if the robot is not well aligned with the token, we move it on the left or on the right
+			print("Left a bit...")
+			turn(-2, 0.5)
+		elif rot_y > a_th:
+			print("Right a bit...")
+			turn(+2, 0.5)
+
+def main():
+	#n, id_set, first_id = count_token()
+	n, id_set, first_id = count_token()
+	print("There are", n,"tokens and their id are:", id_set)
+	#print("The first token i see is:",first_id)
+	while id_set:
+		id_set = find_token(id_set, first_id)
+	print("There is no more unpaired token!")
+		
 
 main()
 
