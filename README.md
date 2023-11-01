@@ -20,24 +20,15 @@ On Ubuntu, this can be accomplished by:
 * Get the location. In my case this was `/usr/local/lib/python2.7/dist-packages`
 * Create symlink: `ln -s path/to/simulator/sr/robot /usr/local/lib/python2.7/dist-packages/sr/`
 
-## Exercise
+## Assignment
 -----------------------------
 
-To run one or more scripts in the simulator, use `run.py`, passing it the file names. 
+The goal of this assignment is to pair all tokens in the arena togheter.
 
-I am proposing you three exercises, with an increasing level of difficulty.
-The instruction for the three exercises can be found inside the .py files (exercise1.py, exercise2.py, exercise3.py).
-
-When done, you can run the program with:
+You can run the program with:
 
 ```bash
-$ python run.py exercise1.py
-```
-
-You have also the solutions of the exercises (folder solutions)
-
-```bash
-$ python run.py solutions/exercise1_solution.py
+$ python run.py assignment.py
 ```
 
 Robot API

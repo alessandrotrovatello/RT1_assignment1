@@ -102,7 +102,7 @@ def find_token(id_set, first_id):
 				print("I'm not close enough");
 		elif -a_th <= rot_y <= a_th: # if the robot is well aligned with the token, we go forward
 			print("Ah, here we are!.",id_token)
-			drive(10, 0.5)
+			drive(100, 0.01)
 		elif rot_y < -a_th: # if the robot is not well aligned with the token, we move it on the left or on the right
 			print("Left a bit...")
 			turn(-2, 0.5)
@@ -129,7 +129,7 @@ def find_first(first_id):
 			break
 		elif -a_th <= rot_y <= a_th: # if the robot is well aligned with the token, we go forward
 			print("Ah, here we are!.",token.info.code)
-			drive(10, 0.5)
+			drive(100, 0.01)
 		elif rot_y < -a_th: # if the robot is not well aligned with the token, we move it on the left or on the right
 			print("Left a bit...")
 			turn(-2, 0.5)
