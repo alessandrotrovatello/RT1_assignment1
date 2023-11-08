@@ -27,8 +27,9 @@ def drive(speed, seconds):
     """
     Function for setting a linear velocity
     
-    Args: speed (int): the speed of the wheels
-	  seconds (int): the time interval
+    Args:
+		speed (int): the speed of the wheels
+		seconds (int): the time interval
     """
     R.motors[0].m0.power = speed
     R.motors[0].m1.power = speed
@@ -40,8 +41,9 @@ def turn(speed, seconds):
     """
     Function for setting an angular velocity
     
-    Args: speed (int): the speed of the wheels
-	  seconds (int): the time interval
+    Args:
+		speed (int): the speed of the wheels
+		seconds (int): the time interval
     """
     R.motors[0].m0.power = speed
     R.motors[0].m1.power = -speed
@@ -57,7 +59,6 @@ def rotation(rot_y):
 	"""
 	if -a_th <= rot_y <= a_th: # if the robot is well aligned with the token, we go forward
 		print("Ah, here we are!.")
-		print(type(rot_y))
 		drive(50, 0.05)
 	elif rot_y < -a_th: # if the robot is not well aligned with the token, we move it on the left
 		print("Left a bit...")
@@ -69,71 +70,85 @@ def rotation(rot_y):
 
 def count_token():
 	"""
-	Function to count how many tokens there are in arena and save their ID in a list.
+	Function to count how many tokens there are in arena and save their IDs in a list.
+	The first token saw it will be the reference token.
 	
 	Returns:
-	n (int): numbers of tokens
-	id_list (list): list of token ids
+		n (int): numbers of tokens
+		id_list (list): list of token IDs
+		reference_id (int): ID of the reference token
 	"""
 	id_list = []
 	dist=100
 	primo = True
 	for i in range(12):
-		#if primo:
-		#	for token in R.see():
-		#		if token.dist < dist:
-		#			first_id = token.info.code
-		#			primo = False
 		for token in R.see():
 			if token.info.code not in id_list:
 				id_list.append(token.info.code)
 		turn(20,0.5)
-	#id_list.remove(first_id)
-	first_id = id_list[0]
-	id_list.remove(first_id)
+	reference_id = id_list[0]
+	id_list.remove(reference_id)
 	n = len(id_list)
-	return n, id_list, first_id
+	return n, id_list, reference_id
 
 	
-def find_token(id_list, first_id):
+def find_token(id_list, reference_id):
+	"""
+	Function to find unpaired token.
+	
+	Args:
+		id_list (list): list of token IDs
+		reference_id (int): ID of the reference token
+	
+	Return:
+		id_list (list): list of token IDs
+	"""
 	dist=100
 	while True:
 		for token in R.see():
-			if token.info.code != first_id and token.info.code in id_list:# and token.dist < dist:
+			if token.info.code != reference_id and token.info.code in id_list:# and token.dist < dist:
 				dist = token.dist
 				rot_y = token.rot_y
 				token_id = token.info.code
 		if dist==100:
-			print("I don't see any token!!")
+			print("I don't see unpaired token!")
 			turn(50,0.05);
 		elif dist < d_th: 
-			print("Token Found!")
+			print("Unpaired token Found!")
 			if R.grab(): # if we are close to the token, we grab it.
-				print("Gotcha!",token.info.code)
-				find_first(first_id,id_list)
+				print("I got the",token.info.code,"token")
+				find_reference(reference_id,id_list)
 				id_list.remove(token.info.code)
-				print("I removed from id_list the token with id:",token.info.code)
+				print("I removed from id_list the token with ID:",token.info.code)
 				print("The new list is:",id_list)
-				print("Other", len(id_list),"token to pair")
+				print("Other", len(id_list),"token to pair.")
 			else:
 				print("I'm not close enough");
 		elif -a_th <= rot_y <= a_th or rot_y < -a_th or rot_y > a_th:
 			rot_y = rotation(rot_y)
 		return id_list
 	
-def find_first(first_id,id_list):
+def find_reference(reference_id,id_list):
+	"""
+	Function to find the reference token.
+	
+	Args:
+		reference_id (int): ID of the reference token
+		id_list (list): list of token IDs
+	"""
 	dist=100
 	while True:
 		for token in R.see():
-			if token.info.code is first_id:# and token.dist < dist:
+			if token.info.code is reference_id:# and token.dist < dist:
 				dist = token.dist
 				rot_y = token.rot_y
 		if dist==100:
-			print("I don't see any token!!")
+			print("I don't see the reference token!!")
 			turn(50,0.05);
 		elif dist < 2*d_th: 
-			print("Token Found!")
+			print("Reference token found!")
 			if R.release(): # if we are close to the token, we release it.
+				print("Token paired!");
 				drive(-30,1)
 				turn(30,2)
 				break
@@ -141,11 +156,10 @@ def find_first(first_id,id_list):
 			rot_y = rotation(rot_y)
 
 def main():
-	n, id_list, first_id = count_token()
-	print("There are", n,"tokens and their id are:", id_list)
-	#print("The first token i see is:",first_id)	
+	n, id_list, reference_id = count_token()
+	print("There are", n,"tokens and their ID are:", id_list)	
 	while id_list:
-		id_list = find_token(id_list, first_id)
+		id_list = find_token(id_list, reference_id)
 	print("There is no more unpaired token!")
 		
 
