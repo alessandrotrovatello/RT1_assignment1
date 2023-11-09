@@ -127,7 +127,7 @@ def find_token(id_list, reference_id):
 	dist=100
 	while True:
 		for token in R.see():
-			if token.info.code != reference_id and token.info.code in id_list and token.dist < dist: 
+			if token.info.code != reference_id and token.info.code in id_list and token.dist < dist: # Search
 				dist = token.dist
 				rot_y = token.rot_y
 		if dist==100:
