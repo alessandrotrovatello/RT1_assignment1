@@ -30,7 +30,9 @@ You can run the program with:
 ```bash
 $ python2 run.py assignment.py
 ```
-![flowchart](flowchart.png)
+<div align="center">
+  <img src="flowchart.png" alt="Flowchart">
+</div>
 
 Robot API
 ---------
