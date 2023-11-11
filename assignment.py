@@ -88,7 +88,7 @@ def rotation(rot_y):
 def count_token():
 	"""
 	Function to count how many tokens there are in arena and save their IDs in a list.
-	The first token saw it will be the reference token.
+	The first token seen it will be the reference token.
 	
 	Returns:
 		id_list (list): list of token IDs
@@ -116,7 +116,7 @@ def count_token():
 	return id_list, reference_id # Return the id_list of unpaired token and the ID of reference token
 
 	
-def find_token(id_list, reference_id):
+def find_unpaired_token(id_list, reference_id):
 	"""
 	Function to find unpaired token.
 	
@@ -143,7 +143,7 @@ def find_token(id_list, reference_id):
 				print("I got the token with ID:",token.info.code)
 				time.sleep(delay)
 				
-				find_reference(reference_id) # Find the reference token to release near it the token just got
+				find_reference_token(reference_id) # Find the reference token to release near it the token just got
 				
 				id_list.remove(token.info.code) # Remove from unpareid token IDs list the token ID just paired
 				print("I removed from id_list the token with ID:",token.info.code)
@@ -158,7 +158,7 @@ def find_token(id_list, reference_id):
 		return id_list # Return the updated id_list
 	return 1
 	
-def find_reference(reference_id):
+def find_reference_token(reference_id):
 	"""
 	Function to find the reference token.
 	
@@ -173,7 +173,7 @@ def find_reference(reference_id):
 				rot_y = token.rot_y
 		if dist==100 or dist==-1:
 			print("I don't see the reference token!!")
-			turn(-50,0.05); #50 0.05
+			turn(-50,0.05);
 		elif dist < 2*d_th: 
 			print("Reference token found!")
 			if R.release(): # if we are close to the token, we release it.
@@ -189,7 +189,7 @@ def main():
 	id_list, reference_id = count_token() # The robot scans the area around it to count how many tokens are in the arena and set the reference token ID
 	time.sleep(delay)
 	while id_list: # Until the id_list of unpaired tokens is empty
-		id_list = find_token(id_list, reference_id) # Find unpaired token and took it to reference token
+		id_list = find_unpaired_token(id_list, reference_id) # Find unpaired token and took it to reference token
 	print("There are no more unpaired tokens!")
 		
 main()
