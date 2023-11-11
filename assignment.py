@@ -16,9 +16,9 @@ My personal implementation has the following steps:
 	- 5) release the unpaired token near to reference token.
 	- 6) repeat 3-5 steps until there are no more unpaired tokens.
 
-To read better what the robot do, I added a simple delay between actions to avoid annoying movement messages.
-I could turn down the velocities and the times of drive and turn functions but the robot would be too slow.
-One of the valutation point of the assignment doesn't include the time to reach the goal but i prefer to speed up the robot.
+To read better what the robot does, I added a simple delay between actions to avoid annoying motion messages.
+I could reduce the speeds and seconds of drive() and turn() functions but the robot would be too slow.
+One of the task of the assignment doesn't include the time to reach the goal, but i preferred to speed up the robot.
 	
 """
 a_th = 5.0
@@ -66,9 +66,12 @@ def turn(speed, seconds):
 				
 def rotation(rot_y):
 	"""
-	Function to adjust the robot's direction with respect to the token
+	Function to adjust the robot's orientation relative to the token
         
-	Args: rot_y (float): rotation about the Y axis in degrees
+	Args: 
+		rot_y (float): rotation about the Y axis in degrees
+	Returns:
+		rot_y (float): rotation about the Y axis in degrees
 	"""
 	if -a_th <= rot_y <= a_th: # if the robot is well aligned with the token, we go forward
 		print("Ah, here we are!.")
@@ -79,7 +82,8 @@ def rotation(rot_y):
 	elif rot_y > a_th: # if the robot is not well aligned with the token, we move it on the right
 		print("Right a bit...")
 		turn(+10, 0.05)
-	return rot_y
+		
+	return rot_y # updated rotation
 
 def count_token():
 	"""
@@ -87,7 +91,6 @@ def count_token():
 	The first token saw it will be the reference token.
 	
 	Returns:
-		n (int): numbers of tokens
 		id_list (list): list of token IDs
 		reference_id (int): ID of the reference token
 	"""
@@ -96,21 +99,21 @@ def count_token():
 	for i in range(12): # The Robot goes around 360 degrees
 		print("I'm scanning the arena.")
 		for token in R.see():
-			if token.info.code not in id_list: # Save in a list all token IDs saw, only if the ID it's not already present there
+			if token.info.code not in id_list: # Saves all the IDs of the tokens seen in a list only if the ID is not already present within the list
 				id_list.append(token.info.code)
-		turn(20,0.5)
+		turn(20,0.5)	
 		
 	n = len(id_list) # Numbers of tokens in the arena
 	print("There are",n,"tokens in the arena and their IDs are:",id_list)
 	
-	reference_id = id_list[0] # Set the first token and saw as reference token
+	reference_id = id_list[0] # Set the first seen as the reference token
 	print("The reference token ID is:",reference_id)
 	
-	id_list.remove(reference_id) # Remove from id_list the reference token ID
+	id_list.remove(reference_id) # Remove the reference token ID from the id_list
 	m = len(id_list) # Numbers of unpaired tokens
 	print("There are", m,"unpaired tokens and their IDs are:", id_list)
 	
-	return id_list, reference_id # Return the id_list of unpaired token and there ID of reference token
+	return id_list, reference_id # Return the id_list of unpaired token and the ID of reference token
 
 	
 def find_token(id_list, reference_id):
@@ -127,10 +130,11 @@ def find_token(id_list, reference_id):
 	dist=100
 	while True:
 		for token in R.see():
-			if token.info.code != reference_id and token.info.code in id_list and token.dist < dist: # Search
+			if token.info.code != reference_id and token.info.code in id_list and token.dist < dist: # Looks for the token with the ID different from the reference ID
+																									 # and that it is within the id_list and within the robot's vision radius
 				dist = token.dist
 				rot_y = token.rot_y
-		if dist==100:
+		if dist==100 or dist==-1:
 			print("I don't see unpaired token!")
 			turn(-50,0.05);
 		elif dist < d_th: 
@@ -146,12 +150,12 @@ def find_token(id_list, reference_id):
 				print("The new list is:",id_list)
 				print("Other", len(id_list),"tokens to pair.")
 				time.sleep(delay)
-				
 			else:
 				print("I'm not close enough");
 		elif -a_th <= rot_y <= a_th or rot_y < -a_th or rot_y > a_th:
-			rot_y = rotation(rot_y)
-		return id_list
+			rot_y = rotation(rot_y) # Adjust the orientation of the robot relative to the unpaired token
+			
+		return id_list # Return the updated id_list
 	return 1
 	
 def find_reference(reference_id):
@@ -167,7 +171,7 @@ def find_reference(reference_id):
 			if token.info.code is reference_id:# and token.dist < dist:
 				dist = token.dist
 				rot_y = token.rot_y
-		if dist==100:
+		if dist==100 or dist==-1:
 			print("I don't see the reference token!!")
 			turn(-50,0.05); #50 0.05
 		elif dist < 2*d_th: 
@@ -178,14 +182,14 @@ def find_reference(reference_id):
 				turn(30,2)
 				break
 		elif -a_th <= rot_y <= a_th or rot_y < -a_th or rot_y > a_th:
-			rot_y = rotation(rot_y)
+			rot_y = rotation(rot_y) # Adjust the orientation of the robot relative to the reference token
 	return 1
 		
 def main():
-	id_list, reference_id = count_token()
+	id_list, reference_id = count_token() # The robot scans the area around it to count how many tokens are in the arena and set the reference token ID
 	time.sleep(delay)
-	while id_list:
-		id_list = find_token(id_list, reference_id)
+	while id_list: # Until the id_list of unpaired tokens is empty
+		id_list = find_token(id_list, reference_id) # Find unpaired token and took it to reference token
 	print("There are no more unpaired tokens!")
 		
 main()
