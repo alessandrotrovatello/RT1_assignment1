@@ -30,6 +30,7 @@ You can run the program with:
 ```bash
 $ python2 run.py assignment.py
 ```
+![flowchart](flowchart.png)
 
 Robot API
 ---------
