@@ -28,7 +28,7 @@ The goal of this assignment is to pair all tokens in the arena togheter.
 You can run the program with:
 
 ```bash
-$ python run.py assignment.py
+$ python2 run.py assignment.py
 ```
 
 Robot API
