@@ -59,7 +59,8 @@ In flowchart terms as below:
 
 ## Notes
 
-To read better what the robot does, I added a simple delay between actions to avoid annoying motion messages.
+To read better what the robot does, I added a simple delay between actions to avoid annoying motion messages. To see how the program behaves without delay set the global variable `delay = 0`.
+
 I could reduce the speeds and seconds of drive() and turn() functions but the robot would be too slow.
 One of the task of the assignment doesn't include the time to reach the goal, but i preferred to speed up the robot.
 
