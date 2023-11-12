@@ -23,17 +23,41 @@ On Ubuntu, this can be accomplished by:
 ## Assignment
 -----------------------------
 
-The goal of this assignment is to pair all tokens in the arena togheter.
+The assignment consist in write a python node that controls the robot to put all the golden boxes together.
 
 You can run the program with:
 
 ```bash
 $ python2 run.py assignment.py
 ```
+
+My personal implementation has the following steps:
+1. count how many tokens there are in the arena and put their IDs in a list.
+2. set as reference token the first token saw and save its ID.
+3. search the unpaired token and grab it.
+4. find the reference token.
+5. release the unpaired token near to reference token.
+6. repeat 3-5 steps until there are no more unpaired tokens.
+
+In flowchart terms as below:
 <div align="center">
   <img src="flowchart.png" alt="Flowchart">
 </div>
 
+
+
+The three main functions are as follows:
+
+### count_token():
+  Function to count how many tokens there are in arena and save their IDs in a list.
+  
+  The first token seen it will be the reference token.
+ 
+### find_unpaired_token():
+  Function to find unpaired token.
+### find_reference_token():
+  Function to find the reference token.
+  
 Robot API
 ---------
 
