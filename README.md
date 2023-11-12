@@ -31,7 +31,7 @@ You can run the program with:
 $ python2 run.py assignment.py
 ```
 <div align="center">
-  <img src="flowchart.drawio" alt="Flowchart">
+  <img src="flowchart.png" alt="Flowchart">
 </div>
 
 Robot API
