@@ -33,7 +33,7 @@ R = Robot()
 p_th = 2
 """ int: Threshold for release the unpaired token to the reference token  """
 
-delay = 5
+delay = 7
 """ int: delay time to read better what the robot do. """
 
 def drive(speed, seconds):
@@ -74,7 +74,7 @@ def rotation(rot_y):
 		rot_y (float): rotation about the Y axis in degrees
 	"""
 	if -a_th <= rot_y <= a_th: # if the robot is well aligned with the token, we go forward
-		print("Ah, here we are!.")
+		print("Ah, here we are!")
 		drive(40, 0.05)
 	elif rot_y < -a_th: # if the robot is not well aligned with the token, we move it on the left
 		print("Left a bit...")
@@ -96,6 +96,7 @@ def count_token():
 	"""
 	id_list = []
 	dist=100
+	i=0
 	for i in range(12): # The Robot goes around 360 degrees
 		print("I'm scanning the arena.")
 		for token in R.see():
@@ -111,7 +112,7 @@ def count_token():
 	
 	id_list.remove(reference_id) # Remove the reference token ID from the id_list
 	m = len(id_list) # Numbers of unpaired tokens
-	print("There are", m,"unpaired tokens and their IDs are:", id_list)
+	print("The unpaired tokens are",m,"and their IDs are:", id_list)
 	
 	return id_list, reference_id # Return the id_list of unpaired token and the ID of reference token
 
@@ -138,7 +139,7 @@ def find_unpaired_token(id_list, reference_id):
 			print("I don't see unpaired token!")
 			turn(-50,0.05);
 		elif dist < d_th: 
-			print("Unpaired token Found!")
+			print("Unpaired token found!")
 			if R.grab(): # if we are close to the token, we grab it.
 				print("I got the token with ID:",token.info.code)
 				time.sleep(delay)
