@@ -30,10 +30,10 @@ d_th = 0.4
 R = Robot()
 """ instance of the class Robot """
 
-p_th = 2
-""" int: Threshold for release the unpaired token to the reference token  """
+p_th = 0.8
+""" float: Threshold for release the unpaired token to the reference token  """
 
-delay = 7
+delay = 5
 """ int: delay time to read better what the robot do. """
 
 def drive(speed, seconds):
@@ -175,7 +175,7 @@ def find_reference_token(reference_id):
 		if dist==100 or dist==-1:
 			print("I don't see the reference token!!")
 			turn(-50,0.05);
-		elif dist < 2*d_th: 
+		elif dist < p_th: 
 			print("Reference token found!")
 			if R.release(): # if we are close to the token, we release it.
 				print("Token paired!");
