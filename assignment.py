@@ -10,7 +10,7 @@ It is requested to write a python node that controls the robot to put all the go
 
 My personal implementation has the following steps:
 	- 1) count how many tokens there are in the arena and put their IDs in a list.
-	- 2) set as reference token the first token saw and save its ID.
+	- 2) set as reference token the first token seen and save its ID.
 	- 3) search the unpaired token and grab it.
 	- 4) find the reference token.
 	- 5) release the unpaired token near to reference token.
